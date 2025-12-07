@@ -1,0 +1,41 @@
+{{define "upload.html"}}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>图片上传 - R2 Uploader</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body>
+  <div class="container">
+    <h1>简单图床</h1>
+    <p>
+      当前空间使用约
+      <strong>{{printf "%.2f" .UsedGB}} GB</strong> /
+      <strong>{{printf "%.1f" .MaxTotalGB}} GB</strong>
+    </p>
+
+    <form id="upload-form" class="card" enctype="multipart/form-data" method="post">
+      <label>
+        选择图片：
+        <input type="file" name="file" accept="image/*" required>
+      </label>
+
+      <div class="turnstile-wrapper">
+        <div
+          class="cf-turnstile"
+          data-sitekey="{{.TurnstileSiteKey}}"
+        ></div>
+      </div>
+
+      <button type="submit">上传</button>
+    </form>
+
+    <div id="result" class="result"></div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
+{{end}}

@@ -1,0 +1,51 @@
+{{define "setup.html"}}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>图床初始化 - R2 Uploader</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>图床初始化</h1>
+    <p>
+      请填写 Cloudflare R2 和 Turnstile 配置。<br>
+      默认总容量限制：<strong>{{printf "%.1f" .MaxTotalGB}} GB</strong>
+    </p>
+
+    <form method="post" action="/setup" class="card">
+      <h2>R2 配置</h2>
+      <label>
+        Account ID
+        <input type="text" name="account_id" required>
+      </label>
+      <label>
+        Access Key ID
+        <input type="text" name="access_key_id" required>
+      </label>
+      <label>
+        Secret Access Key
+        <input type="password" name="secret_access_key" required>
+      </label>
+      <label>
+        Bucket 名称
+        <input type="text" name="bucket" required>
+      </label>
+
+      <h2>Turnstile 配置</h2>
+      <label>
+        Site Key
+        <input type="text" name="turnstile_site_key" required>
+      </label>
+      <label>
+        Secret Key
+        <input type="password" name="turnstile_secret_key" required>
+      </label>
+
+      <button type="submit">保存并开始使用</button>
+    </form>
+  </div>
+</body>
+</html>
+{{end}}
