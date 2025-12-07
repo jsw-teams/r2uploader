@@ -98,10 +98,14 @@ func (r *R2) TotalSize(ctx context.Context) (int64, error) {
 		if err != nil {
 			return 0, err
 		}
+
 		for _, obj := range out.Contents {
-			total += obj.Size
+			// obj.Size 是 *int64，用 aws.ToInt64 转为 int64
+			total += aws.ToInt64(obj.Size)
 		}
-		if !out.IsTruncated || out.NextContinuationToken == nil {
+
+		// out.IsTruncated 是 *bool，用 aws.ToBool 转为 bool
+		if !aws.ToBool(out.IsTruncated) || out.NextContinuationToken == nil {
 			break
 		}
 		token = out.NextContinuationToken
