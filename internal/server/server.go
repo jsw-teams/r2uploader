@@ -20,6 +20,7 @@ import (
 	"sync"
 	"time"
 
+	assets "github.com/jsw-teams/r2uploader"
 	"github.com/jsw-teams/r2uploader/internal/config"
 	"github.com/jsw-teams/r2uploader/internal/storage"
 )
@@ -46,7 +47,8 @@ func New(cfgPath string) (*Server, error) {
 		return nil, fmt.Errorf("load config: %w", err)
 	}
 
-	tmpl, err := template.ParseGlob("web/templates/*.html")
+	// 👇 用内嵌模板而不是本地文件
+	tmpl, err := assets.LoadTemplates()
 	if err != nil {
 		return nil, fmt.Errorf("parse templates: %w", err)
 	}
@@ -74,8 +76,11 @@ func (s *Server) ListenAndServe(addr string) error {
 }
 
 func (s *Server) routes() {
-	// 静态文件 /static/*
-	s.mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
+	// 👇 静态文件改为从内嵌 FS 读取
+	s.mux.Handle(
+		"/static/",
+		http.StripPrefix("/static/", http.FileServer(assets.StaticFileSystem())),
+	)
 
 	// 路由
 	s.mux.HandleFunc("/setup", s.handleSetup)
